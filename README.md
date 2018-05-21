@@ -1,6 +1,9 @@
 # VacationCalendar
 Responsive web application for managing employee vacations built with .NET Core, EF Core and ReactJS.
 
+[![Build status](https://ci.appveyor.com/api/projects/status/7ji426tpu5lohp5h?svg=true)](https://ci.appveyor.com/project/zagorec92/vacationcalendar)
+
+
 ## Dependencies
 
 ### Backend
@@ -73,3 +76,4 @@ Responsive web application for managing employee vacations built with .NET Core,
  * Config (frontend) - API url is in service and it should be in config
  * CSS styles reorganization - most of the styles are in App.css, it is not very easy to find what you want
  * Some strange SQL error is thrown when starting the application for the first time, but DB gets created and initial data is seeded, so this is not a priority
+ * Unit test project - should this be explained at all?
