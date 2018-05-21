@@ -1,0 +1,77 @@
+.navbar {
+	background: #ED483E;
+	display: grid;
+	justify-content: center;
+	grid-auto-flow: column;
+	grid-auto-columns: 100px;
+	height: 60px;
+}
+
+.navbar a {
+	color: #eee;
+	text-decoration: none;
+	padding: 14px 16px;
+	display: inline;
+	text-align: center;
+	font-size: 20px;
+}
+
+.navbar a:not(.hamburger):hover {
+	border-bottom: 3px solid #eee;
+}
+
+.navbar .hamburger {
+	display: none;
+	cursor: pointer;
+}
+
+.active {
+	background: #222;
+}
+
+@media screen and (max-width: 800px) {
+	.navbar a {
+		display: none;
+	}
+
+	.navbar a:nth-child(2) {
+		margin-top: 52px;
+	}
+
+	.navbar a:not(.hamburger):hover {
+		border-bottom: none;
+		background-color: #222;
+	}
+
+	.navbar {
+		display: block;
+		height: auto;
+	}
+
+	.navbar.responsive {
+		position: fixed;
+		width: 100%;
+		/* z-index: 9999; */
+	}
+
+	.navbar.navbar.responsive + div.login-wrapper,
+	.navbar.responsive + div header {
+		margin-top: 52px;
+	}
+
+	.navbar.responsive a {
+		float: none;
+		display: block;
+		text-align: left;
+	}
+
+	.navbar .hamburger {
+		float: right !important;
+		display:block;
+	}
+
+	.active {
+		background-color: transparent;
+		text-decoration: underline !important;
+	}
+}

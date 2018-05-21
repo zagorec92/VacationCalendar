@@ -1,0 +1,23 @@
+.search-wrapper {
+	display: grid;
+	grid-auto-flow: column;
+	margin: 2em auto auto auto;
+	width: 90%;
+}
+
+.search-actions {
+	display: grid;
+	grid-auto-flow: column;
+	grid-auto-columns: 80px;
+	grid-column-gap: 15px;
+}
+
+@media screen and (max-width: 800px) {
+	.search-wrapper {
+		display: block;
+	}
+
+	.button {
+		margin-top: 2em;
+	}
+}

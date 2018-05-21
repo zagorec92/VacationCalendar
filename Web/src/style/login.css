@@ -1,0 +1,84 @@
+.login-wrapper {
+	grid-auto-flow: row;
+	grid-row-gap: 1em;
+	margin: auto;
+	padding-top: 20px;
+	text-align: center;
+	width: 300px;
+}
+
+.error {
+	height: 20px;
+}
+
+.login-wrapper > div:not(:last-child):not(.error) {
+	height: 60px;
+}
+
+.login-wrapper input {
+	outline: none;
+	border: 0px;
+	padding: 0px;
+	height: 40px;
+	width: 100%;
+	box-sizing: content-box;
+}
+
+.login-wrapper input[type="submit"] {
+	border: 1px solid #333;
+	border-radius: 5px;
+}
+
+.login-content {
+	align-items: center;
+	grid-template-columns: 20% 80%;
+	border-bottom: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #333;
+	align-items: baseline;
+}
+
+.login-content .icon {
+	font-size: 24px;
+}
+
+.login-title {
+	font-size: 20px;
+}
+
+.login-content p {
+	font-size: 20px;
+}
+
+.login-content input {
+	color: #333;
+	font-size: 18px;
+}
+
+.login-content input::placeholder {
+	color: #aaa;
+}
+
+.login-content:hover {
+	border-bottom-color: #ED483E;
+}
+
+.login-submit input {
+	background: rgb(16, 150, 64);
+	color: #eee;
+	margin-top: 1.5em;
+	font-size: 16px;
+	width: 70%;
+}
+
+.login-submit input:hover {
+	background: rgba(16, 150, 64, .8);
+	color: #eee;
+	cursor: pointer;
+}
+
+@media screen and (max-width: 800px) {
+	.login-wrapper {
+		width: 70%;
+	}
+}
