@@ -42,6 +42,7 @@ Responsive web application for managing employee vacations built with .NET Core,
 		* Packages will be restored
 	* Invoke `npm start`
 		* Application is started on `http://localhost:3000`
+		* If you want to change the port of the app, you must also change it in the [appsettings.json](API/App.WebApi/appsettings.json) (Section *Data*, Key *ReactAppUrl*) (CORS)
 		
 ### Using the application
 * Home
@@ -59,7 +60,8 @@ Responsive web application for managing employee vacations built with .NET Core,
   * When user is not logged in, display *Login* page
   * When user is logged in, clicking on the menu will log him out
   
- *Randomly generated users and their login data can be found in AppDbContext class.*
+ *Randomly generated users and their login data (email, password) can be found in [AppDbContext](API/App.DAL/AppDbContext.cs) class.*
+ *For administrators, password is 'admin'. For other users, password is their first name in lowercase.*
   
  ## To do (and why)
  * DB concurrency - two users who are working on the same item can override one another when saving
