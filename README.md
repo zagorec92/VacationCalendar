@@ -65,7 +65,7 @@ Responsive web application for managing employee vacations built with .NET Core,
  * DB concurrency - two users who are working on the same item can override one another when saving
  * Batch DB update - one save is called on one item add/update 
  * Paging - display and DB operations will be clustered with data if there are several times more users 
- * React render optimizations - components should be decoupled even more to enable rendering of specific components
+ * React render optimizations - components should be decoupled even more to enable rendering of specific data only
  * Error handling (frontend) - alert window is displayed in most of the cases which is not very user friendly
  * Bundling and minifying - because...web!
  * Config (frontend) - API url is in service and it should be in config
