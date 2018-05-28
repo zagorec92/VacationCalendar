@@ -22,7 +22,6 @@ namespace App.DAL
 		public DbSet<VacationAvailability> VacationAvailabilities { get; set; }
 		public DbSet<Holiday> Holidays { get; set; }
 
-
 		#endregion
 
 		#region Constructor
@@ -34,23 +33,15 @@ namespace App.DAL
 
 		#region Methods
 
+		#region OnModelCreating
+
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			modelBuilder.HasDefaultSchema("EmployeeCalendar");
 
-			modelBuilder.Entity<UserRoles>().HasKey(x => new { x.UserID, x.RoleID });
-
-			modelBuilder.Entity<Holiday>().Property(x => x.Day).HasComputedColumnSql("DAY([Date])");
-			modelBuilder.Entity<Holiday>().Property(x => x.Month).HasComputedColumnSql("MONTH([Date])");
-			modelBuilder.Entity<Holiday>().Property(x => x.Year).HasComputedColumnSql("YEAR([Date])");
-
-			modelBuilder.Entity<User>().HasQueryFilter(x => x.Active.GetValueOrDefault());
-			modelBuilder.Entity<Role>().HasQueryFilter(x => x.Active.GetValueOrDefault());
-			modelBuilder.Entity<Holiday>().HasQueryFilter(x => x.Active.GetValueOrDefault());
-			modelBuilder.Entity<Vacation>().HasQueryFilter(x => x.Active.GetValueOrDefault() && x.StatusID != (int)EnumHelper.VacationStatus.Rejected);
-			modelBuilder.Entity<VacationStatus>().HasQueryFilter(x => x.Active.GetValueOrDefault());
-			modelBuilder.Entity<VacationType>().HasQueryFilter(x => x.Active.GetValueOrDefault());
-			modelBuilder.Entity<VacationAvailability>().HasQueryFilter(x => x.Active.GetValueOrDefault());
+			SetKeys(modelBuilder);
+			SetComputedColumns(modelBuilder);
+			SetQueryFilter(modelBuilder);
 
 			IEnumerable<IMutableEntityType> entities = modelBuilder.Model.GetEntityTypes()
 				.Where(x => typeof(EntityBase).IsAssignableFrom(x.ClrType));
@@ -58,7 +49,7 @@ namespace App.DAL
 			foreach (IMutableEntityType entityType in entities)
 			{
 				EntityTypeBuilder entityTypeBuilder = modelBuilder.Entity(entityType.ClrType);
-				entityTypeBuilder?.Property("DateCreated").HasDefaultValueSql("GETDATE()");
+				entityTypeBuilder?.Property("DateCreated").HasDefaultValueSql("GETDATE()").ValueGeneratedOnAdd();
 				entityTypeBuilder?.Property("Active").HasDefaultValueSql("1").ValueGeneratedOnAdd();
 			}
 
@@ -71,6 +62,37 @@ namespace App.DAL
 
 			Seed(modelBuilder);
 		}
+
+		#endregion
+
+		#region Set
+
+		private void SetKeys(ModelBuilder modelBuilder)
+		{
+			modelBuilder.Entity<UserRoles>().HasKey(x => new { x.UserID, x.RoleID });
+		}
+
+		private void SetComputedColumns(ModelBuilder modelBuilder)
+		{
+			modelBuilder.Entity<Holiday>().Property(x => x.Day).HasComputedColumnSql("DAY([Date])");
+			modelBuilder.Entity<Holiday>().Property(x => x.Month).HasComputedColumnSql("MONTH([Date])");
+			modelBuilder.Entity<Holiday>().Property(x => x.Year).HasComputedColumnSql("YEAR([Date])");
+		}
+
+		private void SetQueryFilter(ModelBuilder modelBuilder)
+		{
+			modelBuilder.Entity<User>().HasQueryFilter(x => x.Active.GetValueOrDefault());
+			modelBuilder.Entity<Role>().HasQueryFilter(x => x.Active.GetValueOrDefault());
+			modelBuilder.Entity<Holiday>().HasQueryFilter(x => x.Active.GetValueOrDefault());
+			modelBuilder.Entity<Vacation>().HasQueryFilter(x => x.Active.GetValueOrDefault() && x.StatusID != (int)EnumHelper.VacationStatus.Rejected);
+			modelBuilder.Entity<VacationStatus>().HasQueryFilter(x => x.Active.GetValueOrDefault());
+			modelBuilder.Entity<VacationType>().HasQueryFilter(x => x.Active.GetValueOrDefault());
+			modelBuilder.Entity<VacationAvailability>().HasQueryFilter(x => x.Active.GetValueOrDefault());
+		}
+
+		#endregion
+
+		#region Seed
 
 		private void Seed(ModelBuilder modelBuilder)
 		{
@@ -126,6 +148,8 @@ namespace App.DAL
 				new Vacation() { ID = 3, UserID = 8, StatusID = (int)EnumHelper.VacationStatus.Entered, TypeID = (int)EnumHelper.VacationType.VacationLeave, AvailabilityID = (int)EnumHelper.VacationAvailability.PartiallyAvailable, DateFrom = DateTime.Parse("2018-07-20"), DateTo = DateTime.Parse("2018-07-23"), DateCreated = DateTime.Now, Active = true }
 			);
 		}
+
+		#endregion
 
 		#endregion
 	}

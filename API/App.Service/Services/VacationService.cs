@@ -35,7 +35,7 @@ namespace App.Service.Services
 		public async Task<IEnumerable<VacationDto>> GetForUserAsync(int? userId, int? year)
 		{
 			if (!userId.HasValue)
-				throw new ArgumentException("Value must not null.", nameof(userId));
+				throw new ArgumentException("Value must not be null.", nameof(userId));
 
 			IEnumerable<Vacation> vacations = await Repository.GetForUserAsync(userId.Value, year.GetValueOrDefault(DateTime.Today.Year));
 			IEnumerable<VacationDto> vacationsDto = vacations.Select(x => new VacationDto().MapFrom(x));
@@ -51,7 +51,7 @@ namespace App.Service.Services
 		public async Task<IEnumerable<VacationDto>> GetForYear(int? year)
 		{
 			if (!year.HasValue)
-				throw new ArgumentException("Year must have a vale", nameof(year));
+				throw new ArgumentException("Year must have a value", nameof(year));
 
 			IEnumerable<Vacation> vacations = await Repository.GetForYear(year.Value);
 			IEnumerable<VacationDto> vacationsDto = vacations.Select(x => new VacationDto().MapFrom(x));

@@ -45,7 +45,7 @@ namespace App.DAL.Repositories
 		public async Task<IEnumerable<Vacation>> GetForUserAsync(int userId, int year)
 		{
 			return await Context.Set<Vacation>()
-				.Where(x => x.UserID == userId && x.StatusID != (int)EnumHelper.VacationStatus.Rejected && (x.DateFrom.Year == year || x.DateTo.Year == year))
+				.Where(x => x.UserID == userId && (x.DateFrom.Year == year || x.DateTo.Year == year))
 				.Include(x => x.Status)
 				.Include(x => x.Type)
 				.Include(x => x.Availability)
