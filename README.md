@@ -8,8 +8,8 @@ Responsive web application for managing employee vacations built with .NET Core,
 
 ### Backend
 
-* [.NET Core 2.0 Web API](https://www.microsoft.com/net/download/windows)
-* [EF Core 2.1.0-rc1-final](https://github.com/aspnet/EntityFrameworkCore)
+* [.NET Core 2.1 Web API](https://www.microsoft.com/net/)
+* [EF Core 2.1.0](https://github.com/aspnet/EntityFrameworkCore)
 * [.NET Standard 2.0](https://docs.microsoft.com/en-us/dotnet/standard/net-standard)
 * [Swagger (API documentation)](https://swagger.io/swagger-ui/)
 
