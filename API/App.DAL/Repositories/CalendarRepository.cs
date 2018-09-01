@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace App.DAL.Repository
+namespace App.DAL.Repositories
 {
 	public class CalendarRepository : RepositoryBase<AppDbContext>, ICalendarRepository
 	{

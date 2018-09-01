@@ -72,13 +72,13 @@ namespace App.Service.DTO
 			if (vacation == null)
 				vacation = new Vacation();
 
-			vacation.ID = this.ID;
-			vacation.DateFrom = this.DateFrom.GetValueOrDefault();
-			vacation.DateTo = this.DateTo.GetValueOrDefault();
-			vacation.TypeID = this.Type.GetValueOrDefault();
-			vacation.StatusID = this.Status.GetValueOrDefault();
-			vacation.AvailabilityID = this.Availability.GetValueOrDefault();
-			vacation.Active = this.Active.GetValueOrDefault();
+			vacation.ID = ID;
+			vacation.DateFrom = DateFrom.GetValueOrDefault();
+			vacation.DateTo = DateTo.GetValueOrDefault();
+			vacation.TypeID = Type.GetValueOrDefault();
+			vacation.StatusID = Status.GetValueOrDefault();
+			vacation.AvailabilityID = Availability.GetValueOrDefault();
+			vacation.Active = Active.GetValueOrDefault();
 
 			return vacation;
 		}

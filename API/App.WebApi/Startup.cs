@@ -1,25 +1,17 @@
 ﻿using App.DAL;
 using App.DAL.Extensions;
-using App.DAL.Repositories;
-using App.DAL.Repositories.Interfaces;
-using App.DAL.Repository;
-using App.Service;
 using App.Service.Extensions;
-using App.Service.Interfaces;
-using App.Service.Services;
-using App.Service.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Text;
-using WebApi.Filters;
+using WebApi.Extensions;
 
 namespace WebApi
 {
@@ -56,35 +48,32 @@ namespace WebApi
 		/// <param name="services">Instance of <see cref="IServiceCollection"/>.</param>
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddDbContext<AppDbContext>(x => x.UseSqlServer(_configuration.GetConnectionString("AppDbContext")));
+			services
+				.AddDbContext<AppDbContext>(x => x.UseSqlServer(_configuration.GetConnectionString("AppDbContext")))
+				.AddDependencies()
+				.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(x =>
+				{
+					x.TokenValidationParameters = new TokenValidationParameters() {
+						ValidateIssuer = true,
+						ValidateAudience = true,
+						ValidateLifetime = true,
+						ValidateIssuerSigningKey = true,
+						RequireExpirationTime = true,
+						RequireSignedTokens = true,
+						ValidIssuer = _configuration.GetData<string>("Security", "Issuer"),
+						ValidAudience = _configuration.GetData<string>("Security", "Issuer"),
+						IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetData<string>("Security", "Key")))
+					};
+				});
 
-			services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(x =>
-			{
-				x.TokenValidationParameters = new TokenValidationParameters() {
-					ValidateIssuer = true,
-					ValidateAudience = true,
-					ValidateLifetime = true,
-					ValidateIssuerSigningKey = true,
-					RequireExpirationTime = true,
-					RequireSignedTokens = true,
-					ValidIssuer = _configuration.GetData<string>("Security", "Issuer"),
-					ValidAudience = _configuration.GetData<string>("Security", "Issuer"),
-					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetData<string>("Security", "Key")))
-				};
-			});
+			services
+				.AddMvc()
+				.AddJsonOptions(x => x.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
 
-			services.AddMvc().AddJsonOptions(x => x.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
-			services.AddMvcCore().AddApiExplorer();
-			services.AddCors();
-
-			services.AddTransient<ICalendarService, CalendarService>();
-			services.AddTransient<IUserService, UserService>();
-			services.AddTransient<IVacationService, VacationService>();
-			services.AddTransient<IUserRepository, UserRepository>();
-			services.AddTransient<ICalendarRepository, CalendarRepository>();
-			services.AddTransient<IVacationRepository, VacationRepository>();
-
-			services.AddScoped<ApplicationExceptionFilterAttribute>();
+			services
+				.AddMvcCore()
+				.AddApiExplorer()
+				.AddCors();
 
 			services.AddSwaggerGen(x =>
 			{
@@ -100,33 +89,35 @@ namespace WebApi
 		/// <param name="app">Instance of <see cref="IApplicationBuilder"/>.</param>
 		public void Configure(IApplicationBuilder app)
 		{
-			app.UseDefaultFiles();
-			app.UseStaticFiles();
+			app
+				.UseDefaultFiles()
+				.UseStaticFiles();
 
 			if (_hostingEnvironment.IsDevelopment())
-			{
 				app.UseDeveloperExceptionPage();
-			}
 
-			app.UseCors(x => x.WithOrigins(_configuration.GetData<string>("Data", "ReactAppUrl")).AllowAnyMethod().AllowAnyHeader());
-			app.UseAuthentication();
-			app.UseMvc();
-			app.UseSwagger();
-			app.UseSwaggerUI(x =>
-			{
-				x.SwaggerEndpoint("/swagger/v1/swagger.json", "EmployeeCalendar API v1");
-				x.RoutePrefix = "docs";
-			});
+			app
+				.UseCors(x => x.WithOrigins(_configuration.GetData<string>("Data", "ReactAppUrl")).AllowAnyMethod().AllowAnyHeader())
+				.UseAuthentication()
+				.UseMvc()
+				.UseSwagger()
+				.UseSwaggerUI(x =>
+				{
+					x.SwaggerEndpoint("/swagger/v1/swagger.json", "EmployeeCalendar API v1");
+					x.RoutePrefix = "docs";
+				});
 
 			using (IServiceScope serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
 			{
-				if (!serviceScope.ServiceProvider.GetService<AppDbContext>().AllMigrationsApplied())
+				AppDbContext dbContext = serviceScope.ServiceProvider.GetService<AppDbContext>();
+				if (!dbContext.AllMigrationsApplied())
 				{
-					serviceScope.ServiceProvider.GetService<AppDbContext>().Database.Migrate();
-					serviceScope.ServiceProvider.GetService<AppDbContext>().EnsureSeeded();
+					dbContext.Database.Migrate();
+					dbContext.EnsureSeeded();
 				}
 			}
 		}
+
 		#endregion
 	}
 }
