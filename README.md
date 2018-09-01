@@ -63,7 +63,7 @@ Responsive web application for managing employee vacations built with .NET Core,
   * When user is not logged in, display *Login* page
   * When user is logged in, clicking on the menu will log him out
   
- *Randomly generated users and their login data (email, password) can be found in [AppDbContext](API/App.DAL/AppDbContext.cs) class.*
+ *Randomly generated users and their login data (email, password) can be found in [SeedHelper](API/App.DAL/Helpers/SeedHelper.cs) class.*
  *For administrators, password is 'admin'. For other users, password is their first name in lowercase.*
   
  ## To do (and why)
